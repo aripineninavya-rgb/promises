@@ -1,6 +1,5 @@
-// Part 1: Creating Your Own Promise 
-
-const flipCoin =() : Promise<string> => {
+// Part 1: Coin flip
+const flipCoin = (): Promise<string> => {
   return new Promise((resolve, reject) => {
     let result = Math.random();
 
@@ -10,20 +9,10 @@ const flipCoin =() : Promise<string> => {
       reject("You lose! It was tails.");
     }
   });
-}
+};
 
-// Test it
-flipCoin()
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-
-// Part 2: Fetching Data from an API 
-  function getAdvice(): Promise<void> {
+// Part 2: Get advice
+function getAdvice(): Promise<string> {
   return fetch("https://api.adviceslip.com/advice")
     .then((response) => {
       if (!response.ok) {
@@ -32,13 +21,29 @@ flipCoin()
       return response.json();
     })
     .then((data) => {
-      console.log("Advice:", data.slip.advice);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
+      return data.slip.advice;
     });
 }
 
-// Test it
-getAdvice();
+// Test Part 1
+flipCoin()
+  .then((result) => console.log(result))
+  .catch((error) => console.log(error));
 
+// Test Part 2
+getAdvice()
+  .then((advice) => console.log("Advice:", advice))
+  .catch((error) => console.error(error));
+
+// Part 3: Combine both
+flipCoin()
+  .then((result) => {
+    console.log(result);
+    return getAdvice();
+  })
+  .then((advice) => {
+    console.log("Your reward advice:", advice);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
