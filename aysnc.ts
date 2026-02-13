@@ -10,22 +10,29 @@ const flipCoin = (): Promise<string> => {
   });
 };
 
-const runCoinFlip = async () => {
+const getAdvice = async (): Promise<string> => {
+  const response = await fetch(
+    `https://api.adviceslip.com/advice?timestamp=${Date.now()}`,
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch advice");
+  }
+
+  const data = await response.json();
+  return data.slip.advice;
+};
+
+const playGame = async () => {
   try {
     const result = await flipCoin();
     console.log(result);
+
+    const advice = await getAdvice();
+    console.log("Your reward advice:", advice);
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.log(error);
   }
 };
 
-runCoinFlip();
-
-function delay(): Promise<string> {
-    return fetch("https://api.adviceslip.com/advice")
-    
-    });
-}
-
-
-
+playGame();
